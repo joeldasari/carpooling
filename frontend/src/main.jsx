@@ -13,10 +13,9 @@ import Dashboard from "./pages/Dashboard.jsx";
 import Login from "./pages/Login.jsx";
 import RideForm from "./pages/RideForm.jsx";
 import Rides from "./pages/Rides.jsx";
-
+5;
 import { SnackbarProvider } from "notistack";
 import Notifications from "./pages/Notifications.jsx";
-import Payments from "./pages/Payments.jsx";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
@@ -85,7 +84,7 @@ const ClerkWithRoutes = () => {
             </>
           }
         />
-        <Route
+        {/* <Route
           path="/payments"
           element={
             <>
@@ -97,7 +96,7 @@ const ClerkWithRoutes = () => {
               </SignedOut>
             </>
           }
-        />
+        /> */}
       </Routes>
     </ClerkProvider>
   );

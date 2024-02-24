@@ -1,62 +1,48 @@
 import mongoose from "mongoose";
 
-const rideSchema = mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "userModel",
-    required: true,
-  },
-  name: {
+const bookedSchema = new mongoose.Schema({
+  carOwner: {
     type: String,
     required: true,
   },
-
-  phone: {
+  carOwnerPhone: {
     type: String,
     required: true,
   },
-
-  email: {
+  carOwnerEmail: {
     type: String,
     required: true,
   },
-
-  vechicleID: {
+  bookedSeats: {
+    type: Number,
+    required: true,
+  },
+  userName: {
     type: String,
     required: true,
   },
-
-  vechicleName: {
+  userEmail: {
     type: String,
     required: true,
   },
-
-  dateTime: {
+  userPhone: {
     type: String,
     required: true,
   },
-
   pickUp: {
     type: String,
     required: true,
   },
-
   drop: {
     type: String,
     required: true,
   },
-
-  bidAmount: {
-    type: Number,
-    required: true,
-  },
-
-  seats: {
+  amount: {
     type: Number,
     required: true,
   },
 });
 
-const rideModel = mongoose.model("rides", rideSchema);
+const bookedModel = mongoose.model("bookedModel", bookedSchema);
 
-export default rideModel;
+export default bookedModel;

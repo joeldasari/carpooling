@@ -2,19 +2,24 @@ import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import { useState } from "react";
+import { useUser } from "@clerk/clerk-react";
 
 const Payments = () => {
   const max = localStorage.getItem("seats");
   const id = localStorage.getItem("id");
   const [selectedSeats, setSelectedSeats] = useState(null);
-  const [loading, setLoading] = useState(false);
+
+  const { user } = useUser();
 
   const handleClick = async () => {
     try {
-      const { data } = await axios.patch(
-        `http://localhost:5000/rides/booking/${id}`,
-        { seats: selectedSeats, status: `${selectedSeats} are booked` }
-      );
+      const { data } = await axios.post(`http://localhost:5000/rides/booked`, {
+        carOwner: id,
+        bookedSeats: selectedSeats,
+        userName: user.firstName,
+        userEmail: user.emailAddresses[0].emailAddress,
+        userPhone: user.phoneNumbers[0].phoneNumber,
+      });
       console.log(data);
     } catch (e) {
       enqueueSnackbar(e.message, { variant: "error" });

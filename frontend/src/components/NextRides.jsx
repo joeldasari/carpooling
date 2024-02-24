@@ -14,28 +14,46 @@ const NextRides = () => {
 
   const userEmail = user.emailAddresses[0].emailAddress;
 
+  const fetchNextRides = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.get(
+        `http://localhost:5000/rides/user/${userEmail}`
+      );
+      setNextRides(data);
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      enqueueSnackbar(e.message, { variant: "error" });
+    }
+  };
+
   useEffect(() => {
-    const fetchNextRides = async () => {
-      try {
-        setLoading(true);
-        const { data } = await axios.get(
-          `http://localhost:5000/rides/user/${userEmail}`
-        );
-        setNextRides(data);
-        setLoading(false);
-      } catch (e) {
-        setLoading(false);
-        enqueueSnackbar(e.message, { variant: "error" });
-      }
-    };
     fetchNextRides();
   }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      const { data } = await axios.delete(
+        `http://localhost:5000/rides/delete/${id}`
+      );
+      fetchNextRides();
+      enqueueSnackbar(data.message, { variant: "success" });
+    } catch (e) {
+      enqueueSnackbar(e.message, { variant: "error" });
+    }
+  };
   return (
     <div className="flex flex-col items-start w-[800px]">
       <h1 className="text-2xl font-semibold">Your Rides</h1>
+
       {loading ? (
         <div className="flex items-center justify-center w-full h-full">
           <Loader />
+        </div>
+      ) : nextRides.length === 0 ? (
+        <div className="text-sm font-semibold text-red-500">
+          You haven't created any rides.
         </div>
       ) : (
         nextRides.map((ride, i) => (
@@ -54,28 +72,20 @@ const NextRides = () => {
                 <span className="font-semibold text-md">{ride?.drop}</span>
               </div>
               <div>
-                <span>Total Seats: </span>
+                <span>Max Seats Available: </span>
                 <span className="font-semibold text-md">{ride?.seats}</span>
               </div>
               <div>
-                <span>Booked Seats: </span>
-                <span className="font-semibold text-md">{ride?.seats}</span>
-              </div>
-              <div>
-                <span>Status: </span>
-
-                {ride?.status === "Not Booked" ? (
-                  <span className="font-semibold text-red-500 text-md">
-                    {ride?.status}
-                  </span>
-                ) : (
-                  <span className="font-semibold text-green-500 text-md">
-                    {ride?.status}
-                  </span>
-                )}
+                <span>Total Amount: </span>
+                <span className="font-semibold text-md">
+                  {ride?.bidAmount}/-
+                </span>
               </div>
             </div>
-            <button className="flex items-center gap-2 px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">
+            <button
+              onClick={() => handleDelete(ride._id)}
+              className="flex items-center gap-2 px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
+            >
               <span className="text-sm font-semibold">Delete Ride</span>
               <TrashIcon color="red" height={20} width={20} />
             </button>

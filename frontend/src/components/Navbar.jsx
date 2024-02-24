@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { UserButton, useAuth } from "@clerk/clerk-react";
 import Loader from "./Loader";
-import { BellIcon } from "@heroicons/react/20/solid";
+import { ChevronRightIcon } from "@heroicons/react/20/solid";
 
 const Navbar = () => {
   const { userId, isLoaded } = useAuth();
@@ -36,16 +36,32 @@ const Navbar = () => {
       {!isLoaded ? (
         <Loader />
       ) : userId ? (
-        <div className="flex items-center gap-4">
-          <Link
+        <div className="flex items-center gap-6">
+          <div className="flex gap-4">
+            <Link
+              to={"/rideform"}
+              className="flex items-center text-sm font-semibold text-black rounded-full hover:text-blue-500"
+            >
+              <span>Create a Ride</span>
+              <ChevronRightIcon className="w-6 h-6" />
+            </Link>
+            <Link
+              to={"/rides"}
+              className="flex items-center text-sm font-semibold text-black rounded-full hover:text-blue-500"
+            >
+              <span>Book a Ride</span>
+              <ChevronRightIcon className="w-6 h-6" />
+            </Link>
+          </div>
+          {/* <Link
             to={"/notifications"}
-            className="relative flex items-center gap-2 p-2 bg-gray-200 rounded-full"
+            className="relative flex items-center gap-2 p-2 bg-gray-200 rounded-full hover:bg-gray-300"
           >
             <BellIcon className="w-6 h-6" />
             <span className="absolute top-0 right-0 px-1 text-xs text-white bg-red-500 rounded-full">
               0
             </span>
-          </Link>
+          </Link> */}
           <button className="flex items-center gap-2">
             <UserButton afterSignOutUrl="/" />
           </button>

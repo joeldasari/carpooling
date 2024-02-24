@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 
 const RideForm = () => {
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { user } = useUser();
   const ts = City.getCitiesOfState("IN", "TG");
@@ -60,15 +61,18 @@ const RideForm = () => {
         seats: seats,
       };
       try {
+        setLoading(true);
         const { status } = await axios.post(
           "http://localhost:5000/rides/new",
           finalDoc
         );
         if (status === 201) {
+          setLoading(false);
           enqueueSnackbar("Your ride has been created", { variant: "success" });
           navigate("/dashboard");
         }
       } catch (e) {
+        setLoading(false);
         enqueueSnackbar(e.messages, { variant: "error" });
       }
     }
@@ -188,7 +192,7 @@ const RideForm = () => {
 
           <label className="flex flex-col gap-1">
             <span className="text-sm text-black">
-              Enter Bid <span className="text-red-500">*</span>
+              Enter Amount of Ride <span className="text-red-500">*</span>
             </span>
 
             <input
@@ -203,14 +207,14 @@ const RideForm = () => {
 
           <label className="flex flex-col gap-1">
             <span className="text-sm text-black">
-              Number of seats <span className="text-red-500">*</span>
+              Maximum no of seats <span className="text-red-500">*</span>
             </span>
 
             <input
               className="px-4 py-2 text-sm border border-gray-300 rounded-full outline-blue-500"
               type="number"
               min={1}
-              max={6}
+              max={4}
               placeholder="Number of seats"
               onChange={(e) => setSeats(e.target.value)}
               required
@@ -218,9 +222,18 @@ const RideForm = () => {
           </label>
         </div>
 
-        <button className="w-full px-4 py-2 text-white bg-blue-500 rounded-full hover:bg-blue-600">
-          Submit
-        </button>
+        {loading ? (
+          <button
+            disabled
+            className="w-full px-4 py-2 text-white bg-blue-400 rounded-full cursor-not-allowed"
+          >
+            Please wait...
+          </button>
+        ) : (
+          <button className="w-full px-4 py-2 text-white bg-blue-500 rounded-full hover:bg-blue-600">
+            Submit
+          </button>
+        )}
       </form>
     </div>
   );

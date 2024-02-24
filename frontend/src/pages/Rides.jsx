@@ -3,13 +3,15 @@ import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import Loader from "../components/Loader";
-import { useNavigate } from "react-router-dom";
+import { useUser } from "@clerk/clerk-react";
 
 const Rides = () => {
   const [allRides, setAllRides] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { user } = useUser();
 
-  const navigate = useNavigate();
+  const [bookLoading, setBookLoading] = useState(false);
+
   useEffect(() => {
     const fetchAllRides = async () => {
       try {
@@ -23,6 +25,37 @@ const Rides = () => {
     };
     fetchAllRides();
   }, []);
+
+  const handleClick = async (name, email, phone, pickUp, drop, amount) => {
+    setBookLoading(true);
+    setBook;
+    const bookingDoc = {
+      carOwner: name,
+      carOwnerEmail: email,
+      carOwnerPhone: phone,
+      pickUp,
+      drop,
+      amount,
+      userName: user.firstName,
+      userEmail: user.emailAddresses[0].emailAddress,
+      userPhone: user.phoneNumbers[0].phoneNumber,
+      bookedSeats: 2,
+    };
+    try {
+      const { data } = await axios.post(
+        "http://localhost:5000/rides/booked",
+        bookingDoc
+      );
+
+      const { status } = data;
+
+      if (status === 201) {
+        enqueueSnackbar;
+      }
+    } catch (e) {
+      console.log(e.message);
+    }
+  };
   return (
     <div>
       <h1 className="mt-10 text-2xl font-semibold text-center ">
@@ -63,17 +96,29 @@ const Rides = () => {
                 <span className="font-semibold text-md">{ride?.seats}</span>
               </div>
 
-              <button
-                onClick={() => {
-                  navigate("/payments");
-                  localStorage.setItem("seats", ride?.seats);
-                  localStorage.setItem("id", ride?.email);
-                }}
-                className="flex items-center gap-2 px-4 py-2 text-white bg-black rounded-lg hover:bg-gray-800"
-              >
-                <span className="text-sm font-semibold">Book Ride</span>
-                <ArrowRightIcon className="w-4 h-4 text-white" />
-              </button>
+              <div>
+                <span>Amount Per Head: </span>
+                <span className="font-semibold text-md">{ride?.bidAmount}</span>
+              </div>
+
+              {user.phoneNumbers[0].phoneNumber !== ride?.phone && (
+                <button
+                  onClick={() =>
+                    handleClick(
+                      ride?.name,
+                      ride?.email,
+                      ride?.phone,
+                      ride?.pickUp,
+                      ride?.drop,
+                      ride?.bidAmount
+                    )
+                  }
+                  className="flex items-center gap-2 px-4 py-2 text-white bg-black rounded-lg hover:bg-gray-800"
+                >
+                  <span className="text-sm font-semibold">Book Ride</span>
+                  <ArrowRightIcon className="w-4 h-4 text-white" />
+                </button>
+              )}
             </div>
           ))
         )}

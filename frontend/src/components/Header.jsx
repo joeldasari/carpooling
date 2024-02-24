@@ -27,8 +27,8 @@ const Header = () => {
           <Loader />
         ) : userId ? (
           <Link
-            className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-black rounded-lg hover:bg-gray-800"
             to={"/dashboard"}
+            className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-black rounded-lg hover:bg-gray-800"
           >
             <p>Go to Dashboard</p>
             <svg

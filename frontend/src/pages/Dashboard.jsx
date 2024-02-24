@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import NextRides from "../components/NextRides";
 import History from "../components/History";
@@ -11,50 +10,8 @@ const Dashboard = () => {
     <div>
       <Navbar />
       <div className="flex flex-col items-center gap-10 my-10">
-        <div className="flex gap-6">
-          <Link
-            to={"/rideform"}
-            className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-black rounded-lg hover:bg-gray-800"
-          >
-            Give a Ride
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-4 h-4"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-              />
-            </svg>
-          </Link>
-          <Link
-            to={"/rides"}
-            className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-black rounded-lg hover:bg-gray-800"
-          >
-            Take a Ride
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-4 h-4"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-              />
-            </svg>
-          </Link>
-        </div>
-
-        <div className="flex gap-2 text-sm">
+        <div className="flex gap-4 text-sm font-medium">
+          <div className="flex gap-4 text-sm font-semibold "></div>
           <button
             onClick={() => setSelection("rides")}
             className={
@@ -76,21 +33,10 @@ const Dashboard = () => {
           >
             Your Bookings
           </button>
-          <button
-            onClick={() => setSelection("history")}
-            className={
-              selection === "history"
-                ? "bg-blue-500 text-white px-4 py-2 rounded-md"
-                : "bg-gray-300 px-4 py-2 rounded-md"
-            }
-          >
-            Your History
-          </button>
         </div>
 
         {selection === "rides" && <NextRides />}
         {selection === "bookings" && <Bookings />}
-        {selection === "history" && <History />}
       </div>
     </div>
   );
