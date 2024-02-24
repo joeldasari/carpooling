@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const bookedSchema = new mongoose.Schema({
+  rideId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
   carOwner: {
     type: String,
     required: true,
@@ -11,10 +15,6 @@ const bookedSchema = new mongoose.Schema({
   },
   carOwnerEmail: {
     type: String,
-    required: true,
-  },
-  bookedSeats: {
-    type: Number,
     required: true,
   },
   userName: {
@@ -39,6 +39,10 @@ const bookedSchema = new mongoose.Schema({
   },
   amount: {
     type: Number,
+    required: true,
+  },
+  booked: {
+    type: Boolean,
     required: true,
   },
 });

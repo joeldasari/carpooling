@@ -6,7 +6,7 @@ import express from "express";
 
 const router = express.Router();
 
-// creating a new ride
+// create a new ride by a rider
 router.post("/new", async (req, res) => {
   try {
     const {
@@ -20,6 +20,7 @@ router.post("/new", async (req, res) => {
       drop,
       bidAmount,
       seats,
+      booked,
     } = req.body;
     const isUserExists = await userModel.findOne({ userEmail: email });
     if (isUserExists) {
@@ -35,6 +36,7 @@ router.post("/new", async (req, res) => {
         drop,
         bidAmount,
         seats,
+        booked,
       });
       res.status(201).json(newRide);
     } else {
@@ -55,6 +57,7 @@ router.post("/new", async (req, res) => {
         drop,
         bidAmount,
         seats,
+        booked,
       });
       res.status(201).json(newRide);
     }
@@ -63,7 +66,7 @@ router.post("/new", async (req, res) => {
   }
 });
 
-// getting all available rides
+// display all available rides to the passengers (book a ride page)
 router.get("/", async (req, res) => {
   try {
     const result = await rideModel.find();
@@ -73,7 +76,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// getting next rides of a user
+// display all created rides of a rider (your rides)
 router.get("/user/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -85,20 +88,19 @@ router.get("/user/:id", async (req, res) => {
   }
 });
 
-// deleting a particular ride
+// deleting a particular ride by rider
 
-router.delete("/delete/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    await rideModel.findByIdAndDelete(id);
-    res.json({ message: "Deleted Successfully" });
-  } catch (e) {
-    res.status(500).json({ message: e.message });
-  }
-});
+// router.delete("/delete/:id", async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     await rideModel.findByIdAndDelete(id);
+//     res.json({ message: "Deleted Successfully" });
+//   } catch (e) {
+//     res.status(500).json({ message: e.message });
+//   }
+// });
 
-// show user bookings
-
+// show booked rides to the passenger
 router.get("/bookedRides/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -109,37 +111,52 @@ router.get("/bookedRides/:id", async (req, res) => {
   }
 });
 
-// user booked a ride
+// ride booked by a passenger (your booking)
 router.post("/booked", async (req, res) => {
   try {
     const {
       carOwner,
       carOwnerPhone,
       carOwnerEmail,
-      bookedSeats,
       userName,
       userEmail,
       userPhone,
       pickUp,
       drop,
       amount,
+      booked,
+      rideId,
     } = req.body;
     console.log(req.body);
     const isUserExists = await userModel.findOne({ userEmail });
     console.log(isUserExists);
     if (isUserExists) {
       const newBooking = await bookedModel.create({
+        rideId,
         carOwner,
         carOwnerEmail,
         carOwnerPhone,
-        bookedSeats,
         userName,
         userEmail,
         userPhone,
         pickUp,
         drop,
         amount,
+        booked,
       });
+      const updateRide = await rideModel.findByIdAndUpdate(
+        { _id: rideId },
+        {
+          $set: {
+            booked: true,
+            passengerName: userName,
+            passengerEmail: userEmail,
+            passengerPhone: userPhone,
+          },
+        },
+        { new: true }
+      );
+      console.log(updateRide);
       console.log(newBooking);
       res.status(201).json(newBooking);
     } else {
@@ -151,14 +168,15 @@ router.post("/booked", async (req, res) => {
       const newBooking = await bookedModel.create({
         carOwner,
         carOwnerEmail,
+        rideId,
         carOwnerPhone,
-        bookedSeats,
         userName,
         userEmail,
         userPhone,
         pickUp,
         drop,
         amount,
+        booked,
       });
       res.status(201).json(newBooking);
     }

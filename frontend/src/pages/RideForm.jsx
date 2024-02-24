@@ -59,6 +59,7 @@ const RideForm = () => {
         drop: destinationCity.name,
         bidAmount: bid,
         seats: seats,
+        booked: false,
       };
       try {
         setLoading(true);

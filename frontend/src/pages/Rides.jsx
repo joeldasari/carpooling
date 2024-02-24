@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { enqueueSnackbar } from "notistack";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import Loader from "../components/Loader";
 import { useUser } from "@clerk/clerk-react";
+import { useNavigate } from "react-router-dom";
 
 const Rides = () => {
+  const navigate = useNavigate();
   const [allRides, setAllRides] = useState([]);
   const [loading, setLoading] = useState(false);
   const { user } = useUser();
@@ -26,34 +28,35 @@ const Rides = () => {
     fetchAllRides();
   }, []);
 
-  const handleClick = async (name, email, phone, pickUp, drop, amount) => {
+  const handleClick = async (ride) => {
     setBookLoading(true);
-    setBook;
     const bookingDoc = {
-      carOwner: name,
-      carOwnerEmail: email,
-      carOwnerPhone: phone,
-      pickUp,
-      drop,
-      amount,
+      carOwner: ride?.name,
+      carOwnerEmail: ride?.email,
+      carOwnerPhone: ride?.phone,
+      pickUp: ride?.pickUp,
+      drop: ride?.drop,
+      amount: ride?.bidAmount,
       userName: user.firstName,
       userEmail: user.emailAddresses[0].emailAddress,
       userPhone: user.phoneNumbers[0].phoneNumber,
-      bookedSeats: 2,
+      booked: true,
+      rideId: ride._id,
     };
     try {
-      const { data } = await axios.post(
+      const result = await axios.post(
         "http://localhost:5000/rides/booked",
         bookingDoc
       );
 
-      const { status } = data;
-
-      if (status === 201) {
-        enqueueSnackbar;
+      if (result.status === 201) {
+        setBookLoading(false);
+        enqueueSnackbar("Your ride has been booked", { variant: "success" });
+        navigate("/dashboard");
       }
     } catch (e) {
-      console.log(e.message);
+      setBookLoading(false);
+      enqueueSnackbar(e.message, { variant: "error" });
     }
   };
   return (
@@ -61,6 +64,10 @@ const Rides = () => {
       <h1 className="mt-10 text-2xl font-semibold text-center ">
         Available Rides
       </h1>
+
+      <p className="text-sm font-semibold text-center text-red-500">
+        {allRides.length === 0 && "No Rides are Available"}
+      </p>
 
       <div className="grid grid-cols-3 gap-6 px-10 py-4">
         {loading ? (
@@ -97,23 +104,31 @@ const Rides = () => {
               </div>
 
               <div>
-                <span>Amount Per Head: </span>
-                <span className="font-semibold text-md">{ride?.bidAmount}</span>
+                <span>Total Amount: </span>
+                <span className="font-semibold text-md">
+                  {ride?.bidAmount}/-
+                </span>
               </div>
 
-              {user.phoneNumbers[0].phoneNumber !== ride?.phone && (
+              {user.phoneNumbers[0].phoneNumber === ride?.phone ? (
+                <p className="text-sm font-semibold text-red-500">
+                  You created this ride
+                </p>
+              ) : ride?.booked === true ? (
+                <div
+                  className={`gap-2 px-4 py-2 text-white  bg-red-500 rounded-lg `}
+                >
+                  <span className="text-sm font-semibold">Already Booked</span>
+                </div>
+              ) : (
                 <button
-                  onClick={() =>
-                    handleClick(
-                      ride?.name,
-                      ride?.email,
-                      ride?.phone,
-                      ride?.pickUp,
-                      ride?.drop,
-                      ride?.bidAmount
-                    )
-                  }
-                  className="flex items-center gap-2 px-4 py-2 text-white bg-black rounded-lg hover:bg-gray-800"
+                  onClick={() => handleClick(ride)}
+                  className={`flex items-center gap-2 px-4 py-2 text-white ${
+                    bookLoading
+                      ? "cursor-not-allowed bg-gray-500 hover:bg-gray-500"
+                      : ""
+                  } bg-black rounded-lg hover:bg-gray-800`}
+                  disabled={bookLoading ? true : false}
                 >
                   <span className="text-sm font-semibold">Book Ride</span>
                   <ArrowRightIcon className="w-4 h-4 text-white" />

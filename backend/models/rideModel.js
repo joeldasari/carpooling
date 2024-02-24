@@ -55,6 +55,13 @@ const rideSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
+  booked: {
+    type: Boolean,
+    required: true,
+  },
+  passengerName: String,
+  passengerEmail: String,
+  passengerPhone: String,
 });
 
 const rideModel = mongoose.model("rides", rideSchema);
