@@ -21,6 +21,7 @@ router.post("/new", async (req, res) => {
       bidAmount,
       seats,
       booked,
+      gender,
     } = req.body;
     const isUserExists = await userModel.findOne({ userEmail: email });
     if (isUserExists) {
@@ -37,6 +38,7 @@ router.post("/new", async (req, res) => {
         bidAmount,
         seats,
         booked,
+        gender,
       });
       res.status(201).json(newRide);
     } else {
@@ -58,6 +60,7 @@ router.post("/new", async (req, res) => {
         bidAmount,
         seats,
         booked,
+        gender,
       });
       res.status(201).json(newRide);
     }

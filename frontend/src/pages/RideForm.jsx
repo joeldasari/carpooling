@@ -10,6 +10,7 @@ import { enqueueSnackbar } from "notistack";
 
 const RideForm = () => {
   const [loading, setLoading] = useState(false);
+  const [gender, setGender] = useState("Male");
   const navigate = useNavigate();
   const { user } = useUser();
   const ts = City.getCitiesOfState("IN", "TG");
@@ -60,6 +61,7 @@ const RideForm = () => {
         bidAmount: bid,
         seats: seats,
         booked: false,
+        gender,
       };
       try {
         setLoading(true);
@@ -128,6 +130,35 @@ const RideForm = () => {
               required
             />
           </label>
+          <div className="flex flex-col gap-1">
+            <span className="text-sm text-black">
+              Gender <span className="text-red-500">*</span>
+            </span>
+            <div className="flex gap-4 px-4 py-2 border border-gray-300 rounded-full">
+              <label className="flex gap-1 cursor-pointer">
+                <span className="text-sm text-black">Male</span>
+                <input
+                  className="cursor-pointer"
+                  type="radio"
+                  value={"Male"}
+                  checked={gender === "Male"}
+                  onChange={(e) => setGender(e.target.value)}
+                  required
+                />
+              </label>
+              <label className="flex gap-1 cursor-pointer">
+                <span className="text-sm text-black">Female</span>
+                <input
+                  className="cursor-pointer"
+                  type="radio"
+                  value={"Female"}
+                  checked={gender === "Female"}
+                  onChange={(e) => setGender(e.target.value)}
+                  required
+                />
+              </label>
+            </div>
+          </div>
 
           <label className="flex flex-col gap-1">
             <span className="text-sm text-black">
@@ -181,18 +212,6 @@ const RideForm = () => {
 
           <label className="flex flex-col gap-1">
             <span className="text-sm text-black">
-              Drop Point <span className="text-red-500">*</span>
-            </span>
-
-            <Selector
-              people={cityData}
-              selected={destinationCity}
-              setSelected={setDestinationCity}
-            />
-          </label>
-
-          <label className="flex flex-col gap-1">
-            <span className="text-sm text-black">
               Enter Amount of Ride <span className="text-red-500">*</span>
             </span>
 
@@ -203,6 +222,18 @@ const RideForm = () => {
               placeholder="Enter amount in Rupees"
               onChange={(e) => setBid(e.target.value)}
               required
+            />
+          </label>
+
+          <label className="flex flex-col gap-1">
+            <span className="text-sm text-black">
+              Drop Point <span className="text-red-500">*</span>
+            </span>
+
+            <Selector
+              people={cityData}
+              selected={destinationCity}
+              setSelected={setDestinationCity}
             />
           </label>
 

@@ -94,6 +94,10 @@ const Rides = () => {
                 <span className="font-semibold text-md">{ride?.name}</span>
               </div>
               <div>
+                <span>Gender: </span>
+                <span className="font-semibold text-md">{ride?.gender}</span>
+              </div>
+              <div>
                 <span>Phone: </span>
                 <span className="font-semibold text-md">{ride?.phone}</span>
               </div>

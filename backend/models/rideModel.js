@@ -59,6 +59,10 @@ const rideSchema = mongoose.Schema({
     type: Boolean,
     required: true,
   },
+  gender: {
+    type: String,
+    required: true,
+  },
   passengerName: String,
   passengerEmail: String,
   passengerPhone: String,

@@ -15,7 +15,6 @@ import RideForm from "./pages/RideForm.jsx";
 import Rides from "./pages/Rides.jsx";
 5;
 import { SnackbarProvider } from "notistack";
-import Notifications from "./pages/Notifications.jsx";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
@@ -71,32 +70,6 @@ const ClerkWithRoutes = () => {
             </>
           }
         />
-        <Route
-          path="/notifications"
-          element={
-            <>
-              <SignedIn>
-                <Notifications />
-              </SignedIn>
-              <SignedOut>
-                <App />
-              </SignedOut>
-            </>
-          }
-        />
-        {/* <Route
-          path="/payments"
-          element={
-            <>
-              <SignedIn>
-                <Payments />
-              </SignedIn>
-              <SignedOut>
-                <App />
-              </SignedOut>
-            </>
-          }
-        /> */}
       </Routes>
     </ClerkProvider>
   );

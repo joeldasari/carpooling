@@ -53,15 +53,7 @@ const Navbar = () => {
               <ChevronRightIcon className="w-6 h-6" />
             </Link>
           </div>
-          {/* <Link
-            to={"/notifications"}
-            className="relative flex items-center gap-2 p-2 bg-gray-200 rounded-full hover:bg-gray-300"
-          >
-            <BellIcon className="w-6 h-6" />
-            <span className="absolute top-0 right-0 px-1 text-xs text-white bg-red-500 rounded-full">
-              0
-            </span>
-          </Link> */}
+
           <button className="flex items-center gap-2">
             <UserButton afterSignOutUrl="/" />
           </button>
